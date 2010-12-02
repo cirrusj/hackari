@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+	body {
+		color: #C02020;
+		height: 10px;
+		background: #C0C0C0;
+		padding: 0px;
+	}
+	#postdata {
+		position: absolute;
+		left: 50px;
+		padding: 0px;
+		height: 27px;
+		width: 95%;
+		border: 0px;
+		resize: none;
+		-webkit-border-radius: 3px;
+	}
+	*:focus { outline: none; }
+	span {
+		position: absolute;
+		left: 0px;
+	}
+</style>
+
+<script type="text/javascript">
+document.addEventListener("keypress", safari.extension.bars[0].contentWindow.handle_keypress)
+</script>
+</head>
+<body>
+<span>Post:</span>
+<textarea onfocus="safari.extension.bars[0].contentWindow.selectedArea='postdata';" id="postdata"></textarea>
+<span id="hidden_postdata" style="display:none;"></span>
+</body>
+</html>
+

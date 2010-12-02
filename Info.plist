@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>cirrus</string>
+	<key>CFBundleDisplayName</key>
+	<string>HackAri</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.cirrus.hackari</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Bars</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>bar.html</string>
+				<key>Identifier</key>
+				<string>HackBar</string>
+				<key>Label</key>
+				<string>HackBar</string>
+			</dict>
+			<dict>
+				<key>Filename</key>
+				<string>bar2.html</string>
+				<key>Identifier</key>
+				<string>PostDataBar</string>
+				<key>Label</key>
+				<string>PostDataBar</string>
+			</dict>
+		</array>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Command</key>
+				<string>load</string>
+				<key>Identifier</key>
+				<string>load</string>
+				<key>Image</key>
+				<string>icons/load.png</string>
+				<key>Label</key>
+				<string>Load URL</string>
+				<key>Palette Label</key>
+				<string>Load</string>
+				<key>Tool Tip</key>
+				<string>Load URL</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>execute</string>
+				<key>Identifier</key>
+				<string>execute</string>
+				<key>Image</key>
+				<string>icons/execute.png</string>
+				<key>Label</key>
+				<string>Execute</string>
+				<key>Palette Label</key>
+				<string>Execute</string>
+				<key>Tool Tip</key>
+				<string>Execute</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>urlencode</string>
+				<key>Identifier</key>
+				<string>urlencode</string>
+				<key>Image</key>
+				<string>icons/urle.png</string>
+				<key>Label</key>
+				<string>URL Encode</string>
+				<key>Palette Label</key>
+				<string>URL Encode</string>
+				<key>Tool Tip</key>
+				<string>URL Encode</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>urldecode</string>
+				<key>Identifier</key>
+				<string>urldecode</string>
+				<key>Image</key>
+				<string>icons/urld.png</string>
+				<key>Label</key>
+				<string>URL Decode</string>
+				<key>Palette Label</key>
+				<string>URL Decode</string>
+				<key>Tool Tip</key>
+				<string>URL Decode</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>base64encode</string>
+				<key>Identifier</key>
+				<string>base64encode</string>
+				<key>Image</key>
+				<string>icons/b64e.png</string>
+				<key>Include By Default</key>
+				<true/>
+				<key>Label</key>
+				<string>Base64 Encode</string>
+				<key>Palette Label</key>
+				<string>Base64 Encode</string>
+				<key>Tool Tip</key>
+				<string>Base64 Encode</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>base64decode</string>
+				<key>Identifier</key>
+				<string>base64decode</string>
+				<key>Image</key>
+				<string>icons/b64d.png</string>
+				<key>Include By Default</key>
+				<true/>
+				<key>Label</key>
+				<string>Base64 Decode</string>
+				<key>Palette Label</key>
+				<string>Base64 Decode</string>
+				<key>Tool Tip</key>
+				<string>Base64 Decode</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>showhide</string>
+				<key>Identifier</key>
+				<string>showhide</string>
+				<key>Image</key>
+				<string>icons/icon.png</string>
+				<key>Label</key>
+				<string>Show/Hide</string>
+				<key>Palette Label</key>
+				<string>Show/Hide</string>
+				<key>Tool Tip</key>
+				<string>Show/Hide</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>increment</string>
+				<key>Identifier</key>
+				<string>increment</string>
+				<key>Image</key>
+				<string>icons/add.png</string>
+				<key>Label</key>
+				<string>Increment</string>
+				<key>Palette Label</key>
+				<string>Increment</string>
+				<key>Tool Tip</key>
+				<string>Increment</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>decrement</string>
+				<key>Identifier</key>
+				<string>decrement</string>
+				<key>Image</key>
+				<string>icons/remove.png</string>
+				<key>Include By Default</key>
+				<true/>
+				<key>Label</key>
+				<string>Decrement</string>
+				<key>Palette Label</key>
+				<string>Decrement</string>
+				<key>Tool Tip</key>
+				<string>Decrement</string>
+			</dict>
+			<dict>
+				<key>Command</key>
+				<string>makeImage</string>
+				<key>Identifier</key>
+				<string>makeImage</string>
+				<key>Image</key>
+				<string>icons/image.png</string>
+				<key>Label</key>
+				<string>Make Image</string>
+				<key>Palette Label</key>
+				<string>Make Image</string>
+				<key>Tool Tip</key>
+				<string>Make Image</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>End</key>
+			<array>
+				<string>inject.js</string>
+			</array>
+		</dict>
+	</dict>
+	<key>Description</key>
+	<string>HackBar for Safari</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Include Secure Pages</key>
+			<true/>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Website</key>
+	<string>http://www.0x0lab.org</string>
+</dict>
+</plist>

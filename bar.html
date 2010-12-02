@@ -1,0 +1,427 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+	body {
+		color: #C02020;
+		background: #C0C0C0;
+		padding: 0px;
+	}
+	#data {
+		position: absolute;
+		left: 50px;
+		padding: 0px;
+		height: 27px;
+		width: 95%;
+		border: 0px;
+		-webkit-border-radius: 3px;
+		resize: none;
+	}
+	td {
+		padding: 0px;
+	}
+	td {
+		padding: 0px;
+	}
+	table {
+		padding: 0px;
+	}
+	tbody {
+		padding: 0px;
+	}
+	span {
+		position: absolute;
+		left: 0px;
+	}
+	*:focus { outline: none; }
+</style>
+
+<script type="text/javascript">
+var selectedArea = "data";
+
+function sendMessage(msg){
+	if(msg==="getURL"){
+		safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("action", "getURL");
+	}
+}
+function loadURL(){
+	if(safari.application.activeBrowserWindow.activeTab.url === undefined) return;
+	var url = safari.application.activeBrowserWindow.activeTab.url;
+	document.getElementById("data").value = url;
+	safari.extension.bars[1].contentWindow.document.getElementById("postdata").value = "";
+	var regex = new RegExp(document.getElementById("hidden_getdata").innerText+"$")
+	if(regex.exec(url)) {
+		safari.extension.bars[1].contentWindow.document.getElementById("postdata").value = safari.extension.bars[1].contentWindow.document.getElementById("hidden_postdata").innerText;
+	} else { 
+		safari.extension.bars[1].contentWindow.document.getElementById("postdata").value = "";
+	}
+}	
+
+function respondToMessage(messageEvent){
+	if(messageEvent.name === "URL")
+		document.getElementById("data").value=messageEvent.message;
+	if(messageEvent.name === "log")
+		console.log(messageEvent.message);
+	if(messageEvent.name === "form") {
+		safari.extension.bars[1].contentWindow.document.getElementById("hidden_postdata").innerText = messageEvent.message;
+		console.log(safari.extension.bars[1].contentWindow.document.getElementById("hidden_postdata").innerText);
+	}
+	if(messageEvent.name === "form_action") {
+		document.getElementById("hidden_getdata").innerText = messageEvent.message;
+	}
+}
+
+function getSelection() {
+	var txtarea = document.getElementById("data");
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	return selection;
+}
+
+function makeImage() {
+	var image = safari.application.activeBrowserWindow.activeTab.visibleContentsAsDataURL();
+	if(image) {
+		safari.application.activeBrowserWindow.openTab();
+		safari.application.activeBrowserWindow.activeTab.url=image;
+	}
+}
+
+function gotoURL() {
+	var postdata = safari.extension.bars[1].contentWindow.document.getElementById("postdata");
+	if(!document.getElementById("data").value.match(/^https?:\/\//)) {
+		document.getElementById("data").value="http://"+document.getElementById("data").value;
+	}
+	var request = { 'url':document.getElementById("data").value };
+	if(postdata.value.length > 0 && safari.extension.bars[1].visible) {
+		request.postdata = escape(postdata.value);
+		console.log(request.postdata);
+		document.getElementById("hidden_getdata").innerText = request.url
+		safari.application.activeBrowserWindow.activeTab.url='data:text/html;charset=utf-8,%3C%21DOCTYPE%20html%3E%3Chtml%3E%3Chead%3E%3Cscript%3Efunction%20populateForm%28request%29%20%7Bvar%20form1%3Ddocument.createElement%28%22form%22%29%3Bform1.action%3Drequest.url%3Bform1.id%3D%22form1%22%3Bform1.method%3D%22POST%22%3Bvar%20pdata%20%3D%20unescape%28request.postdata%29%3Bvar%20fields_raw%20%3D%20pdata.split%28%2f%26%2f%29%3Bvar%20fields%20%3D%20new%20Array%28%29%3Bfor%28var%20i%20in%20fields_raw%29%7Bvar%20field_raw%20%3D%20fields_raw%5Bi%5D%3Bvar%20fname%3Bvar%20fvalue%20%3D%20%27%27%3Bif%20%28field_raw.indexOf%28%27%3D%27%29%21%3D-1%29%7Bfname%20%3D%20field_raw.substr%280%2C%20field_raw.indexOf%28%27%3D%27%29%29%3Bfvalue%20%3D%20field_raw.substr%28field_raw.indexOf%28%27%3D%27%29%20%2b%201%29%3B%7Delse%7Bfname%20%3D%20field_raw%3B%7Dfields.push%28%7B%20name%3A%20decodeURIComponent%28fname%29%2C%20value%20%3A%20decodeURIComponent%28fvalue%29%20%7D%29%3B%7Dfor%28var%20i%20in%20fields%29%7Bvar%20inp%20%3D%20document.createElement%28%22input%22%29%3Binp.name%20%3D%20fields%5Bi%5D%5B%27name%27%5D%3Binp.value%20%3D%20fields%5Bi%5D%5B%27value%27%5D%3Binp.type%20%3D%20%22text%22%3Bform1.appendChild%28inp%29%3B%7Ddocument.body.appendChild%28form1%29%3Bdocument.forms%5B0%5D.submit%28%29%7D%3C%2fscript%3E%3C%2fhead%3E%3Cbody%20onload%3D%27populateForm%28'+encodeURI(JSON.stringify(request))+'%29%3B%27%3E%3C%2fbody%3E%3C%2fhtml%3E%0A';
+	} else {
+		safari.application.activeBrowserWindow.activeTab.url = request.url;
+	}
+}
+
+function urlencode() {
+	if(selectedArea==="postdata") {
+		var txtarea = safari.extension.bars[1].contentWindow.document.getElementById(selectedArea);
+	} else {
+		var txtarea = document.getElementById(selectedArea);
+	}
+	var original = txtarea.value;
+	var selectionStart = txtarea.selectionStart;
+	var selectionEnd = txtarea.selectionEnd;
+	var len = txtarea.value.length;
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	var escaped = escape(selection);
+	escaped = escaped.replace(/\*/g,'%2A');
+	escaped = escaped.replace(/\//g,'%2F');
+	escaped = escaped.replace(/\./g,'%2E');
+	escaped = escaped.replace(/\+/g,'%2B');
+	txtarea.value =  txtarea.value.substring(0,selectionStart) + escaped + txtarea.value.substring(selectionEnd,len);
+	txtarea.focus();
+	txtarea.select();
+	txtarea.selectionStart = selectionStart;
+	txtarea.selectionEnd = selectionStart + escaped.length;
+}
+
+function urldecode() {
+	if(selectedArea==="postdata") {
+		var txtarea = safari.extension.bars[1].contentWindow.document.getElementById(selectedArea);
+	} else {
+		var txtarea = document.getElementById(selectedArea);
+	}
+	var original = txtarea.value;
+	var selectionStart = txtarea.selectionStart;
+	var selectionEnd = txtarea.selectionEnd;
+	var len = txtarea.value.length;
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	var unescaped = unescape(selection);
+	txtarea.value =  txtarea.value.substring(0,selectionStart) + unescaped + txtarea.value.substring(selectionEnd,len);
+	txtarea.focus();
+	txtarea.select();
+	txtarea.selectionStart = selectionStart;
+	txtarea.selectionEnd = selectionStart + unescaped.length;
+}
+
+function base64encode() {
+	if(selectedArea==="postdata") {
+		var txtarea = safari.extension.bars[1].contentWindow.document.getElementById(selectedArea);
+	} else {
+		var txtarea = document.getElementById(selectedArea);
+	}
+	var original = txtarea.value;
+	var selectionStart = txtarea.selectionStart;
+	var selectionEnd = txtarea.selectionEnd;
+	var len = txtarea.value.length;
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	var escaped = Base64.encode(selection);
+	txtarea.value =  txtarea.value.substring(0,selectionStart) + escaped + txtarea.value.substring(selectionEnd,len);
+	txtarea.focus();
+	txtarea.select();
+	txtarea.selectionStart = selectionStart;
+	txtarea.selectionEnd = selectionStart + escaped.length;
+}
+
+function base64decode() {
+	if(selectedArea==="postdata") {
+		var txtarea = safari.extension.bars[1].contentWindow.document.getElementById(selectedArea);
+	} else {
+		var txtarea = document.getElementById(selectedArea);
+	}
+	var original = txtarea.value;
+	var selectionStart = txtarea.selectionStart;
+	var selectionEnd = txtarea.selectionEnd;
+	var len = txtarea.value.length;
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	var unescaped = Base64.decode(selection);
+	txtarea.value =  txtarea.value.substring(0,selectionStart) + unescaped + txtarea.value.substring(selectionEnd,len);
+	txtarea.focus();
+	txtarea.select();
+	txtarea.selectionStart = selectionStart;
+	txtarea.selectionEnd = selectionStart + unescaped.length;
+}
+
+function increment() {
+	if(selectedArea==="postdata") {
+		var txtarea = safari.extension.bars[1].contentWindow.document.getElementById(selectedArea);
+	} else {
+		var txtarea = document.getElementById(selectedArea);
+	}
+	var original = txtarea.value;
+	var selectionStart = txtarea.selectionStart;
+	var selectionEnd = txtarea.selectionEnd;
+	var len = txtarea.value.length;
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	var type = typeof(parseInt(selection));
+	if(type==="number" && !isNaN(parseInt(selection))) {
+		var newvalue= ++selection;
+		txtarea.value =  txtarea.value.substring(0,selectionStart) + newvalue + txtarea.value.substring(selectionEnd,len);
+		txtarea.focus();
+		txtarea.select();
+		txtarea.selectionStart = selectionStart;
+		txtarea.selectionEnd = selectionStart + String(newvalue).length;
+		gotoURL();
+	}
+}
+
+function letter(mode,letter) {
+	var alphabet = new Array( 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                       'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' );
+	if(mode==="inc") {
+		return alphabet[alphabet.indexOf(letter)+1];
+	} else if (mode==="dec") {
+		return alphabet[alphabet.indexOf(letter)-1];
+	}
+}
+
+function decrement() {
+	if(selectedArea==="postdata") {
+		var txtarea = safari.extension.bars[1].contentWindow.document.getElementById(selectedArea);
+	} else {
+		var txtarea = document.getElementById(selectedArea);
+	}
+	var original = txtarea.value;
+	var selectionStart = txtarea.selectionStart;
+	var selectionEnd = txtarea.selectionEnd;
+	var len = txtarea.value.length;
+	var selection = (txtarea.value).substring(txtarea.selectionStart,txtarea.selectionEnd);
+	var type = typeof(parseInt(selection));
+	if(type==="number" && !isNaN(parseInt(selection))) {
+		var newvalue= --selection;
+		txtarea.value =  txtarea.value.substring(0,selectionStart) + newvalue + txtarea.value.substring(selectionEnd,len);
+		txtarea.focus();
+		txtarea.select();
+		txtarea.selectionStart = selectionStart;
+		txtarea.selectionEnd = selectionStart + String(newvalue).length;
+		gotoURL();
+	}
+}
+
+
+function performCommand(event){
+	if(event.command === "load"){
+		loadURL();
+		document.getElementById("data").focus();
+		document.getElementById("data").selectionStart = document.getElementById("data").value.length;
+	} else 	if(event.command === "execute"){
+		gotoURL();
+	} else 	if(event.command === "urlencode"){
+		urlencode();
+	} else 	if(event.command === "urldecode"){
+		urldecode();
+	} else 	if(event.command === "base64encode"){
+		base64encode();
+	} else 	if(event.command === "base64decode"){
+		base64decode();
+	} else if (event.command === "showhide") {
+		if (safari.self.visible && safari.extension.bars[1].visible) {
+			safari.extension.bars[1].hide();
+		} else if (safari.self.visible && !safari.extension.bars[1].visible) {
+			safari.self.hide();
+			safari.extension.bars[1].hide();
+		} else if (!safari.self.visible && !safari.extension.bars[1].visible) {
+			safari.self.show();
+			safari.extension.bars[1].show();
+		}
+	} else 	if(event.command === "increment"){
+		increment();
+	} else 	if(event.command === "decrement"){
+		decrement();
+	} else 	if(event.command === "makeImage"){
+		makeImage();
+	}
+
+}
+
+var Base64 = {
+	// private property
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+	// public method for encoding
+	encode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = Base64._utf8_encode(input);
+ 
+		while (i < input.length) {
+ 
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+ 
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+ 
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+ 
+			output = output +
+			this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+			this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+ 
+		}
+ 
+		return output;
+	},
+	// public method for decoding
+	decode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+ 
+		while (i < input.length) {
+ 
+			enc1 = this._keyStr.indexOf(input.charAt(i++));
+			enc2 = this._keyStr.indexOf(input.charAt(i++));
+			enc3 = this._keyStr.indexOf(input.charAt(i++));
+			enc4 = this._keyStr.indexOf(input.charAt(i++));
+ 
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+ 
+			output = output + String.fromCharCode(chr1);
+ 
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+ 
+		}
+ 
+		output = Base64._utf8_decode(output);
+ 
+		return output;
+ 
+	},
+	// private method for UTF-8 encoding
+	_utf8_encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+ 
+		for (var n = 0; n < string.length; n++) {
+ 
+			var c = string.charCodeAt(n);
+ 
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+ 
+		}
+ 
+		return utftext;
+	},
+	// private method for UTF-8 decoding
+	_utf8_decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+ 
+		while ( i < utftext.length ) {
+ 
+			c = utftext.charCodeAt(i);
+ 
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+ 
+		}
+ 
+		return string;
+	}
+ 
+}
+
+function handle_keypress(keyPressed) {
+	//console.log(keyPressed);
+	if(keyPressed.ctrlKey && keyPressed.charCode == 24) {
+		gotoURL();
+	} else if(keyPressed.ctrlKey && keyPressed.charCode == 21) {
+		loadURL();
+	}
+}
+
+safari.self.browserWindow.addEventListener("message",respondToMessage,false);
+safari.self.browserWindow.addEventListener("command", performCommand, false);
+document.addEventListener("keypress", handle_keypress)
+
+</script>
+</head>
+<body>
+<span>Request:</span>
+<textarea onfocus="selectedArea='data';" id="data"></textarea>
+<span id="hidden_getdata" style="display:none;"></span>
+</body>
+</html>
